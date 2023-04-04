@@ -1,0 +1,90 @@
+################################################################################
+#######     KEG              Přepočet váhy na pivo                       #######
+################################################################################  
+sensor:  
+- platform: template
+  sensors:
+    pocet_piv_vrchni:
+      friendly_name: Počet piv vrchní
+      value_template: >-
+         {% if states('sensor.vrchni_vaha') | float < 0.1  %} 
+         0
+         {% else %}
+         {{ (((states.sensor.vrchni_vaha.state | float) - 10 ) *2 )  | round(0) }}
+         {% endif %}
+    #  "{{ (((states.sensor.vrchni_vaha.state | float) - 10 ) *2 )  | round(0) }}"
+      icon_template: >-
+         {% if states('sensor.vrchni_vaha') | float < 0.1  %} 
+         mdi:glass-mug-variant-off
+         {% else %}
+         mdi:glass-mug-variant
+         {% endif %}
+         
+      
+      
+- platform: template
+  sensors:
+    pocet_piv_spodni:
+      friendly_name: Počet piv spodní
+      value_template:  >-
+         {% if states('sensor.spodni_vaha') | float < 0.1  %} 
+         0
+         {% else %}
+         {{ ((((states.sensor.spodni_vaha.state | float) - 10 ) - (states.sensor.vrchni_vaha.state | float)) *2 )  | round(0) }}
+         {% endif %}
+    #  "{{ ((((states.sensor.spodni_vaha.state | float) - 10 ) - (states.sensor.vrchni_vaha.state | float)) *2 )  | round(0) }}"      
+      icon_template: >-
+         {% if states('sensor.spodni_vaha') | float < 0.1  %} 
+         mdi:glass-mug-variant-off
+         {% else %}
+         mdi:glass-mug-variant
+         {% endif %}
+         
+         
+########################################################
+#######     RSS FEED SENSOR                      #######
+########################################################
+
+- platform: feedparser
+  name: Engineering Feed
+  feed_url: 'https://trends.google.com/trends/trendingsearches/daily/rss?geo=CZ'
+  date_format: '%a, %d %b %Y %H:%M:%S %Z'
+  scan_interval:
+    hours: 1
+  inclusions:
+    - title
+    - link
+    - description
+    - image
+    - pubDate
+  exclusions:
+    - language
+
+########################################################
+#######     Google Trend title to text           #######
+########################################################
+
+script:
+trend_to_text:
+  alias: Copy sensor entries to input_text
+  sequence:
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.google_trend_1
+        value: "{{ states.sensor.engineering_feed.attributes.entries[0].title }}"
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.google_trend_2
+        value: "{{ states.sensor.engineering_feed.attributes.entries[1].title }}"
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.google_trend_3
+        value: "{{ states.sensor.engineering_feed.attributes.entries[2].title }}"        
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.google_trend_4
+        value: "{{ states.sensor.engineering_feed.attributes.entries[3].title }}"        
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.google_trend_5
+        value: "{{ states.sensor.engineering_feed.attributes.entries[4].title }}"     
