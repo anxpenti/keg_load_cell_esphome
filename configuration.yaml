@@ -46,7 +46,7 @@ sensor:
 ########################################################
 
 - platform: feedparser
-  name: Engineering Feed
+  name: Google Trends Feed
   feed_url: 'https://trends.google.com/trends/trendingsearches/daily/rss?geo=CZ'
   date_format: '%a, %d %b %Y %H:%M:%S %Z'
   scan_interval:
