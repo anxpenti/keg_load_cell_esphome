@@ -181,7 +181,7 @@ image:
 spi:
   clk_pin: GPIO13
   mosi_pin: GPIO14
-     # it.print(0, 0, id(roboto), "NO KURWA!");
+
 display:
   - platform: waveshare_epaper
     id: epaper
