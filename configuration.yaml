@@ -40,6 +40,52 @@ sensor:
          mdi:glass-mug-variant
          {% endif %}
          
+########################################################
+##             NASTAVENI LEDNICE PRO SUDY             ##
+########################################################
+
+velikost_druh_sudu:
+  alias: Velikost a druh sudu
+  sequence:
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.obrazek_spodni_sud
+      data:
+        value: >
+          {% if is_state("input_select.druh_piva_p", "není naraženo") %} 0
+          {% elif is_state("input_select.druh_piva_p", "Radegast") %} 1
+          {% elif is_state("input_select.druh_piva_p", "Kozel") %} 2
+          {% elif is_state("input_select.druh_piva_p", "Kingswood") %} 3
+          {% endif %}
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.vaha_spodni_sud
+      data:
+        value: >
+          {% if is_state("input_select.velikost_sudu_p", "15L") %} 8.7
+          {% elif is_state("input_select.velikost_sudu_p", "30L") %} 10
+          {% elif is_state("input_select.velikost_sudu_p", "50L") %} 15
+          {% endif %}
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.obrazek_vrchni_sud
+      data:
+        value: >
+          {% if is_state("input_select.druh_piva_l", "není naraženo") %} 0
+          {% elif is_state("input_select.druh_piva_l", "Radegast") %} 1
+          {% elif is_state("input_select.druh_piva_l", "Kozel") %} 2
+          {% elif is_state("input_select.druh_piva_l", "Kingswood") %} 3
+          {% endif %}
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.vaha_vrchni_sud
+      data:
+        value: >
+          {% if is_state("input_select.velikost_sudu_l", "15L") %} 8.7
+          {% elif is_state("input_select.velikost_sudu_l", "30L") %} 10
+          {% elif is_state("input_select.velikost_sudu_l", "50L") %} 15
+          {% endif %}
+                   
          
 ########################################################
 #######     RSS FEED SENSOR                      #######
@@ -53,10 +99,6 @@ sensor:
     hours: 1
   inclusions:
     - title
-    - link
-    - description
-    - image
-    - pubDate
   exclusions:
     - language
 
